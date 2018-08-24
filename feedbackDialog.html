@@ -133,7 +133,7 @@ border-radius: 6px 6px 0 0;
 
 <div class="dialogFeedback">
 
-  <a href="https://www.foodbyte.org/"> <img class="closeBtn" src="https://cdn3.iconfinder.com/data/icons/navigation-icons-1/32/cancel-512.png"> </a>
+  <a href="https://www.foodbyte.org/supplier-check.html"> <img class="closeBtn" src="https://cdn3.iconfinder.com/data/icons/navigation-icons-1/32/cancel-512.png"> </a>
 
   <div class="dialogHead">
 
@@ -141,7 +141,7 @@ border-radius: 6px 6px 0 0;
 
   </div>
 
-  <form action="https://formspree.io/burhanshakir96@gmail.com" method="POST">
+  <form action="https://formspree.io/feedback@profcal.ie" method="POST">
 
 
     <div class="dialogBody">
@@ -151,9 +151,8 @@ border-radius: 6px 6px 0 0;
       <div class="dialogReactions">
 
 
-        <img id="angryImg" class="dialogReactionImg" src="https://emojipedia-us.s3.amazonaws.com/thumbs/120/google/146/angry-face_1f620.png" alt="" onclick="setReaction(this,'angry')">
-        <img id="neutralImg" class="dialogReactionImg" src="https://emojipedia-us.s3.amazonaws.com/thumbs/120/google/146/neutral-face_1f610.png" alt="" onclick="setReaction(this,'neutral')">
-        <img id="happyImg" class="dialogReactionImg" src="https://emojipedia-us.s3.amazonaws.com/thumbs/120/google/146/smiling-face-with-smiling-eyes_1f60a.png" alt="" onclick="setReaction(this,'happy')">
+        <img id="angryImg" class="dialogReactionImg" src="https://emojipedia-us.s3.amazonaws.com/thumbs/120/facebook/138/cross-mark_274c.png" alt="" onclick="setReaction(this,'Not acceptable')">
+        <img id="happyImg" class="dialogReactionImg" src="https://emojipedia-us.s3.amazonaws.com/thumbs/120/facebook/138/white-heavy-check-mark_2705.png" alt="" onclick="setReaction(this,'Happy with the way it went')">
 
 
       </div>
@@ -167,7 +166,8 @@ border-radius: 6px 6px 0 0;
         <textarea name="feedback" class="feedbackTextarea" rows="3" maxlength="512" placeholder="(Optional) Suggest Improvements.."></textarea>
 
         <!-- Navigating to home page after form submission -->
-        <input type="hidden" name="_next" value="https://foodbyte.org" />
+        <input type="hidden" name="_next" value="https://www.foodbyte.org/supplier-check.html/" />
+        <input type="hidden" name="_subject" value="Foodbyte Feedback - Product Submission" />
       </div>
 
       <input type="submit" class="submitBtn" value="Send and Continue"></input>
@@ -185,6 +185,16 @@ border-radius: 6px 6px 0 0;
 
 var reactionBtns = document.querySelectorAll(".dialogReactionImg");
 
+if(checkCookie()) //If user has already provided feedback
+{
+  document.getElementsByTagName("BODY")[0].style.display = "none";
+  window.location = "https://www.foodbyte.org/supplier-check.html/"; // Redirecting it back to products add page
+  console.log("USER SUBMITTED FEEDBACK");
+
+}
+
+
+// Onclick of a reaction image
 function setReaction(element, reaction)
 {
 
@@ -199,9 +209,56 @@ function setReaction(element, reaction)
 
   element.style.border = "2px solid #02b3e4";
 
-
 }
 
+
+// Setting cookie if not exists
+function setCookie(cname, cvalue, exdays)
+{
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000)); //Expiry date
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+// Getting the cookie if the user has already submitted feedback
+function getCookie(cname)
+{
+    var name = cname + "=";
+    var cookieArray = document.cookie.split(';');
+    for(var i = 0; i < cookieArray.length; i++)
+    {
+        var c = cookieArray[i];
+        while (c.charAt(0) == ' ')
+        {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0)
+        {
+            console.log("COOKIE VALUE:", c.substring(name.length, c.length));
+            return c.substring(name.length, c.length);
+        }
+    }
+
+    //Returning false if cookie doesnt exist
+    return "false";
+}
+
+
+function checkCookie()
+{
+    var feedback = getCookie("productFeedback");
+    if (feedback != "false")
+    {
+        console.log("Feedback Cookie exists");
+        return true; //User already has provided feedback
+    }
+    else
+    {
+      setCookie("productFeedback", "true", 30); // setting cookie value to true, expires in 30 days
+      return false; //User has not provided feedback
+    }
+}
 </script>
 
 </html>
